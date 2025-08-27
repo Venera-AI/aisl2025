@@ -1,45 +1,17 @@
+import asyncio
 import datetime
 import os
 from typing import Literal, Optional
-from zoneinfo import ZoneInfo
-from google.adk.agents import Agent
+from google.adk.agents import Agent, InvocationContext, RunConfig
+from google.adk.sessions import InMemorySessionService, Session
+from google.genai import types as gtypes
 from google.adk.models.lite_llm import LiteLlm
 import litellm
 import requests
 from tavily import TavilyClient
+from datetime import datetime
 
 litellm.drop_params = True
-
-# def search(query: str) -> dict[str, dict[str, str]]:
-#     """
-#     Search the web using Jina.ai API.
-
-#     Args:
-#         query (str): The search query.
-#     Returns:
-#         str: The search results as a string.
-#     """
-#     api_url = "https://s.jina.ai/"
-#     headers = {
-#         "Accept": "application/json",
-#         "Authorization": f"Bearer {os.environ.get('JINA_API_KEY')}",
-#     }
-#     params = {"q": query}
-#     response = requests.get(api_url, headers=headers, params=params, timeout=300)
-#     if response.status_code == 200:
-#         data = response.json()
-#         results = data.get("data", [])
-#         if not results:
-#             return {"0": {"error": "No results found"}}
-#         return {
-#             str(k): {
-#                 "title": item.get("title", ""),
-#                 "url": item.get("url", ""),
-#                 "snippet": item.get("description", ""),
-#             }
-#             for k, item in enumerate(results)
-#         }
-#     return {"0": {"error": f"Search failed with status code {response.status_code}."}}
 
 web_pages: dict[str, str] = {}
 
@@ -118,23 +90,9 @@ def visit_web_page(url: str) -> str:
     return f"Failed to visit web page. Status code: {response.status_code}."
 
 
-mem = ["User is a male teenager"]
-
-
-def add_to_memory(memo: str) -> None:
-    """
-    This tool allows you to persist information across conversations. Write whatever information you want to remember. The information will appear in the USER INFORMATION in future conversations.
-
-    Args:
-        memo (str): The information to persist.
-    Returns:
-        None
-    """
-    mem.append(memo)
-
-
-def construct_prompt_with_memory() -> str:
-    return f"""You are a web search assistant. Your job is find the information the user need using the search tool and summarize the text into a detailed, 2-4 paragraph explanation that captures the main ideas and provides a comprehensive answer to the query.
+def construct_system_prompt() -> str:
+    return f"""Today: {datetime.today().strftime("%Y-%m-%d")}
+You are a medical assistant. Your job is assist the user with information retrieval and summarization. You should find the information the user need using the search tool and summarize the text into a detailed, 2-4 paragraph explanation that captures the main ideas and provides a comprehensive answer to the query.
 If the query is \"summarize\", you should provide a detailed summary of the text. If the query is a specific question, you should answer it in the summary.
 
 You also have to provide citations for your summary like this:
@@ -144,7 +102,7 @@ Where:
   - The text inside <cite></cite> is part of your answer, not the original chunk text.
   - Keep your answer minimal in whitespace. Do not add extra spaces or line breaks.
   - Only add <cite> tags around the key phrases of your answer that rely on some chunk.
-Remember: The text inside <cite> is your final answer's snippet, not the chunk text itself.
+Remember: The text inside <cite> is your final answer's snippet, not the chunk text itself. This feature is very important for the user
 
 Example:
 User's query: Who is Donald Trump?
@@ -154,27 +112,23 @@ Web search results: {{
 }}
 Your answer should look like:
 Donald Trump is <cite chunk_id="0">the 47th president of the United States</cite> 
-
-USER INFORMATION:
-{'\n'.join("- " + fact for fact in mem)}
     """.strip()
 
 
 root_agent = Agent(
     name="root_agent",
-    model=LiteLlm(
-        "groq/moonshotai/kimi-k2-instruct",
-        reasoning_effort="high",
-        thinking={
-            "type": "enabled",
-            "budget_tokens": 8000,
-        },
-    ),
-    # model="gemini-2.5-flash",
+    # model=LiteLlm(
+    #     "groq/moonshotai/kimi-k2-instruct",
+    #     reasoning_effort="high",
+    #     thinking={
+    #         "type": "enabled",
+    #         "budget_tokens": 8000,
+    #     },
+    # ),
+    model="gemini-2.5-flash",
     description=("Agent to answer questions about the time and weather in a city."),
-    instruction=construct_prompt_with_memory(),
+    instruction=construct_system_prompt(),
     tools=[
-        add_to_memory,
         search,
         visit_web_page,
     ],
