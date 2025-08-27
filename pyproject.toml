@@ -1,0 +1,11 @@
+[project]
+name = "search-demo"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "google-adk>=1.11.0",
+    "litellm>=1.75.8",
+    "tavily-python>=0.7.11",
+]
