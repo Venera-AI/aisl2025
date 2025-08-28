@@ -59,7 +59,7 @@ async def main(base_url: str):
     )
     with open("output.jsonl", "w") as f:
         for result in results:
-            json.dump(result, f)
+            json.dump(result, f, ensure_ascii=False)
             f.write("\n")
 
 

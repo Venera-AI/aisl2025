@@ -6,6 +6,6 @@ regulator_agent = Agent(
     name="regulator_agent",
     model=config.regulator.get_model(),
     description="This agent gather regulation related to the current conversation",
-    instruction="""""".strip(),
+    instruction="""You are a """.strip(),
     tools=[search, visit_web_page],
 )

@@ -61,6 +61,6 @@ root_agent = SequentialAgent(
             ],
             max_iterations=3,
         ),
-        doctor_agent,
+        doctor_agent.clone(),
     ],
 )

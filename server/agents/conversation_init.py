@@ -4,10 +4,8 @@ from google.genai import types as gtypes
 from google.adk.agents.callback_context import CallbackContext
 
 
-def change_role_to_user(callback_context: CallbackContext) -> gtypes.Content:
-    return gtypes.Content(
-        parts=[gtypes.Part(text=callback_context.state.get("question"))], role="user"
-    )
+def remove_user_input(callback_context: CallbackContext):
+    callback_context.user_content.parts[0].text = "[REDACTED]"
 
 
 conversation_init_agent = Agent(
@@ -18,4 +16,5 @@ conversation_init_agent = Agent(
 Only output what the user would say and nothing else.
     """.strip(),
     output_key="question",
+    after_agent_callback=remove_user_input,
 )
