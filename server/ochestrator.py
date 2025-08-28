@@ -57,11 +57,10 @@ root_agent = SequentialAgent(
             description="Core doctor ask, patient answer loop",
             sub_agents=[
                 doctor_agent,
-                FinalReportEscalationCheck("final_report_checker"),
                 patient_agent,
             ],
             max_iterations=3,
         ),
-        final_report_agent,
+        doctor_agent,
     ],
 )

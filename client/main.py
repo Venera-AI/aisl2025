@@ -29,7 +29,7 @@ def create_session(
     return response.json()
 
 
-def run_agent_loop_and_collect_data(base_url: str, ehr: dict):
+async def run_agent_loop_and_collect_data(base_url: str, ehr: dict):
     app_name = "server"
     # Create a new session
     user_id = uuid4().hex

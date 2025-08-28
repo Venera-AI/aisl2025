@@ -50,18 +50,11 @@ root_agent = SequentialAgent(
     name="root_agent",
     description="Root agent",
     sub_agents=[
-        DocumentSaver("ehr_extractor"),
-        conversation_init_agent,
         LoopAgent(
             name="doctor_patient_loop",
             description="Core doctor ask, patient answer loop",
-            sub_agents=[
-                doctor_agent,
-                FinalReportEscalationCheck("final_report_checker"),
-                patient_agent,
-            ],
+            sub_agents=[],
             max_iterations=3,
         ),
-        final_report_agent,
     ],
 )
