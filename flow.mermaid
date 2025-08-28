@@ -1,0 +1,15 @@
+---
+title: Data-synth flow
+---
+flowchart TD
+    A(EHR) --> B[conversation_init]
+    B --"Generate first patient question"--> C[doctor]
+subgraph "Core loop"
+    C
+    D
+end
+    C --"Ask patient for more symptom or lab result"--> D[patient]
+    C --> E[Lab test suggestion]
+    C --> F[Regulator]
+    C --> G[Information retriver]
+    D --"Patient answer doctor's question using EHR"--> C

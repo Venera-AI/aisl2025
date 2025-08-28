@@ -7,5 +7,6 @@ requires-python = ">=3.13"
 dependencies = [
     "google-adk>=1.11.0",
     "litellm>=1.75.8",
+    "pyyaml>=6.0.2",
     "tavily-python>=0.7.11",
 ]
