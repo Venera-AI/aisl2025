@@ -1,9 +1,8 @@
-from google.adk.agents import Agent
-from ..tools import visit_web_page, search
 from datetime import datetime
 from ..config import config
-from google.genai import types as gtypes
-from google.adk.agents.callback_context import CallbackContext
+from google.adk.agents import Agent
+from google.adk.tools import AgentTool
+from agents import regulator_agent, information_retriever_agent, drug_info_agent
 
 doctor_agent = Agent(
     name="doctor",
@@ -16,7 +15,7 @@ You are a Healthcare AI Assistant, made by Venera AI. Engage warmly yet honestly
 
 If the discussion goes off the healthcare/medical subject, you must not answer the question and drive the conversation back to the subject.
 
-You should look for information online using the search and visit_web_page tools to ensure the medical information you provided is correct and up to date.
+You should look for information using the provided tools to ensure the medical information you provided is correct and up to date.
 
 You must provide citations for your answer like this:
 This feature is very important for the user
@@ -43,5 +42,9 @@ IMPORTANT: If the question about sensitive topics, remind the user that they are
 
 You should response in Vietnamese.
 """.strip(),
-    tools=[search, visit_web_page],
+    tools=[
+        AgentTool(regulator_agent),
+        AgentTool(information_retriever_agent),
+        AgentTool(drug_info_agent),
+    ],
 )

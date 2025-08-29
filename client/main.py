@@ -1,7 +1,7 @@
 import requests
 from uuid import uuid4
 import json
-import sys
+import typer
 from ehr_read import get_ehrs
 import asyncio
 import tqdm.asyncio
@@ -29,11 +29,11 @@ def create_session(
     return response.json()
 
 
-async def run_agent_loop_and_collect_data(base_url: str, ehr: dict):
+async def run_agent_loop_and_collect_data(base_url: str, agent_name: str, ehr: dict):
     app_name = "server"
     # Create a new session
     user_id = uuid4().hex
-    session = create_session(base_url, app_name, user_id)
+    session = create_session(base_url, agent_name, user_id)
     session_id = (
         session["id"]
         if isinstance(session, dict) and "id" in session
@@ -52,10 +52,17 @@ async def run_agent_loop_and_collect_data(base_url: str, ehr: dict):
     return response.json()
 
 
-async def main(base_url: str):
+from functools import wraps
+
+app = typer.Typer()
+
+
+@app.command()
+@lambda f: wraps(f)(lambda *a, **kw: asyncio.run(f(*a, **kw)))
+async def main(base_url: str, agent_name):
     ehrs = get_ehrs()[:2]
     results = await tqdm.asyncio.tqdm_asyncio.gather(
-        *[run_agent_loop_and_collect_data(base_url, ehr) for ehr in ehrs]
+        *[run_agent_loop_and_collect_data(base_url, agent_name, ehr) for ehr in ehrs]
     )
     with open("output.jsonl", "w") as f:
         for result in results:
@@ -64,10 +71,4 @@ async def main(base_url: str):
 
 
 if __name__ == "__main__":
-    # Example user_id, replace as needed
-    if len(sys.argv) > 2:
-        base_url = sys.argv[1]
-    else:
-        base_url = "http://localhost:8000"
-
-    asyncio.run(main(base_url))
+    app()

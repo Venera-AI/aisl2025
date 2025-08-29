@@ -16,11 +16,10 @@ class ModelConfig(BaseModel):
 class Config(BaseModel):
     doctor: ModelConfig = ModelConfig(model_id="gemini-2.5-flash")
     information_retriever: ModelConfig = ModelConfig(model_id="gemini-2.5-flash")
-    labtest_suggest: ModelConfig = ModelConfig(model_id="gemini-2.5-flash")
+    drug_info: ModelConfig = ModelConfig(model_id="gemini-2.5-flash")
     regulator: ModelConfig = ModelConfig(model_id="gemini-2.5-flash")
     patient: ModelConfig = ModelConfig(model_id="gemini-2.5-flash")
     conversation_init: ModelConfig = ModelConfig(model_id="gemini-2.5-flash")
-    final_report: ModelConfig = ModelConfig(model_id="gemini-2.5-flash")
 
 
 import yaml

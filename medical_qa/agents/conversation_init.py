@@ -12,7 +12,7 @@ conversation_init_agent = Agent(
     name="conversation_init",
     model=config.conversation_init.get_model(),
     description="This agent will choose a topic for a doctor visit, and provide the first patient question to initialize the conversation.",
-    instruction="""You are a helpful assistant for creating medical questions. Pretend to be a user reporting about their symptom based on the provied ehr. Think from the user's perspective.
+    instruction="""You are a helpful assistant for creating medical questions. Pretend to be a user asking question about the provied ehr. The person you are talking to doesn't know about this EHR. Think from the user's perspective. Be a bit real, don't be too formal.
 Only output what the user would say and nothing else.
     """.strip(),
     output_key="question",
