@@ -1,7 +1,7 @@
 import vertexai
 from vertexai.preview import reasoning_engines
 from medical_qa import root_agent  # modify this if your agent is not in agent.py
-import toml
+import tomllib
 
 # TODO: Fill in these values for your project
 PROJECT_ID = "venerian"
@@ -23,9 +23,15 @@ app = reasoning_engines.AdkApp(
 )
 from vertexai import agent_engines
 
+with open("pyproject.toml", "rb") as f:
+    pyproject = tomllib.load(f)
+    print(pyproject)
 remote_app = agent_engines.create(
-    agent_engine=app, requirements=["google-cloud-aiplatform[adk,agent_engines]"]
+    agent_engine=app,
+    requirements=pyproject["project"]["dependencies"],
+    extra_packages=["./medical_qa"],
 )
+
 
 print(f"Deployment finished!")
 print(f"Resource Name: {remote_app.resource_name}")

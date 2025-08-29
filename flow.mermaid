@@ -8,8 +8,8 @@ subgraph "Core loop"
     C
     D
 end
-    C --"Ask patient for more symptom or lab result"--> D[patient]
-    C --> E[Lab test suggestion]
+    C --> D[patient]
+    C --> E[Drug info]
     C --> F[Regulator]
     C --> G[Information retriver]
-    D --"Patient answer doctor's question using EHR"--> C
+    D --> C

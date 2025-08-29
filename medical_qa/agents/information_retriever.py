@@ -31,5 +31,8 @@ information_retriever_agent = Agent(
     - List all sources used, including a brief note on why each is considered reliable.
     - Avoid any language that could be interpreted as medical advice.
 """.strip(),
-    tools=[google_search, visit_web_page],
+    tools=[
+        google_search,
+        # visit_web_page,
+    ],
 )

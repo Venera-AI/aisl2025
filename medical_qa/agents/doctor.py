@@ -45,8 +45,8 @@ IMPORTANT: If the question about sensitive topics, remind the user that they are
 You should response in Vietnamese.
 """.strip(),
     tools=[
-        AgentTool(regulator_agent, skip_summarization=True),
-        AgentTool(information_retriever_agent, skip_summarization=True),
-        AgentTool(drug_info_agent, skip_summarization=True),
+        AgentTool(regulator_agent),
+        AgentTool(information_retriever_agent),
+        AgentTool(drug_info_agent),
     ],
 )

@@ -24,4 +24,7 @@ class Config(BaseModel):
 
 import yaml
 
-config = Config.model_validate(yaml.safe_load(open("config.yaml")))
+try:
+    config = Config.model_validate(yaml.safe_load(open("config.yaml")))
+except:
+    config = Config()

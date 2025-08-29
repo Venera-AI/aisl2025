@@ -26,5 +26,8 @@ IMPORTANT:
 - Reliable Sources: Prioritize information from official government agencies (.gov), recognized legal databases, and well-known healthcare compliance firms. Avoid forums, blogs, or unverified sources.
 
 """.strip(),
-    tools=[google_search, visit_web_page],
+    tools=[
+        google_search,
+        # visit_web_page,
+    ],
 )
