@@ -4,7 +4,7 @@ from ..config import config
 from ..tools import search, visit_web_page
 
 drug_info_agent = Agent(
-    name="regulator_agent",
+    name="drug_info",
     model=config.regulator.get_model(),
     description="This agent gather information about drugs, including their properties, uses, and potential interactions",
     instruction="""You are a highly specialized AI agent, acting as a Drug Information Specialist. Your primary mission is to find, retrieve, and synthesize information about pharmaceutical drugs, with a specific focus on identifying potential interactions between them. Your responses must be accurate, objective, and meticulously sourced.

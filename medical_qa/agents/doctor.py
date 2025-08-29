@@ -2,7 +2,9 @@ from datetime import datetime
 from ..config import config
 from google.adk.agents import Agent
 from google.adk.tools import AgentTool
-from agents import regulator_agent, information_retriever_agent, drug_info_agent
+from .regulator import regulator_agent
+from .information_retriever import information_retriever_agent
+from .drug_info import drug_info_agent
 
 doctor_agent = Agent(
     name="doctor",
@@ -43,8 +45,8 @@ IMPORTANT: If the question about sensitive topics, remind the user that they are
 You should response in Vietnamese.
 """.strip(),
     tools=[
-        AgentTool(regulator_agent),
-        AgentTool(information_retriever_agent),
-        AgentTool(drug_info_agent),
+        AgentTool(regulator_agent, skip_summarization=True),
+        AgentTool(information_retriever_agent, skip_summarization=True),
+        AgentTool(drug_info_agent, skip_summarization=True),
     ],
 )
